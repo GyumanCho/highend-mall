@@ -24,44 +24,48 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-muted">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-6 lg:px-12 py-4">
-        {/* Menu toggle (mobile) */}
-        <button
-          className="lg:hidden p-1"
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-        >
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
+      <div className="grid grid-cols-3 items-center px-4 sm:px-6 lg:px-12 py-4">
+        {/* Left: Menu toggle (mobile) */}
+        <div className="flex items-center">
+          <button
+            className="lg:hidden p-1"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
           >
-            {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
 
-        {/* Logo */}
-        <Link href="/" className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
-          <h1 className="font-serif text-2xl lg:text-3xl tracking-wider uppercase">
-            Maison
-          </h1>
-        </Link>
+        {/* Center: Logo */}
+        <div className="flex justify-center">
+          <Link href="/">
+            <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl tracking-wider uppercase whitespace-nowrap">
+              Maison
+            </h1>
+          </Link>
+        </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-5">
+        {/* Right: Actions */}
+        <div className="flex items-center justify-end gap-3 sm:gap-5">
           <button
             onClick={() => setIsSearchOpen(true)}
             className="text-secondary hover:text-primary transition-colors"
@@ -73,7 +77,9 @@ export function Header() {
             </svg>
           </button>
           <NotificationBell />
-          <AuthButton />
+          <span className="hidden sm:inline">
+            <AuthButton />
+          </span>
           <CartCount />
         </div>
       </div>
@@ -87,6 +93,10 @@ export function Header() {
         } lg:block border-t border-muted`}
       >
         <ul className="flex flex-col lg:flex-row lg:justify-center gap-0 lg:gap-8 px-6 lg:px-0 py-3">
+          {/* Mobile: show auth link at top of menu */}
+          <li className="sm:hidden py-2 border-b border-muted mb-2">
+            <AuthButton />
+          </li>
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link

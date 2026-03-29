@@ -1,12 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { formatPrice } from "@/lib/mock-data";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, subtotal, clearCart } =
     useCartStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 lg:px-12 py-24 text-center">
+        <h1 className="font-serif text-4xl mb-6">Your Bag</h1>
+        <div className="h-40" />
+      </div>
+    );
+  }
 
   const total = subtotal();
   const shippingNote =

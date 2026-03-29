@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { formatPrice } from "@/lib/mock-data";
 
@@ -46,6 +47,8 @@ const TIER_CONFIG = {
 
 export default function AccountPage() {
   const { items: wishlistItems, removeItem } = useWishlistStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   const customer = MOCK_CUSTOMER;
   const tierConfig = TIER_CONFIG[customer.tier];
   const progressToNext = tierConfig.nextTier
@@ -146,9 +149,9 @@ export default function AccountPage() {
           {/* Wishlist */}
           <section>
             <h2 className="text-xs tracking-widest uppercase text-secondary mb-6">
-              Wishlist ({wishlistItems.length})
+              Wishlist ({mounted ? wishlistItems.length : 0})
             </h2>
-            {wishlistItems.length > 0 ? (
+            {mounted && wishlistItems.length > 0 ? (
               <div className="grid grid-cols-2 gap-6">
                 {wishlistItems.map((item) => (
                   <div key={item.productId} className="group">

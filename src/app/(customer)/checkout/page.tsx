@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useOrderStore, type ShippingAddress } from "@/lib/stores/order-store";
@@ -31,6 +31,7 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCartStore();
   const { createOrder } = useOrderStore();
 
+  const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>("shipping");
   const [address, setAddress] = useState<ShippingAddress>(EMPTY_ADDRESS);
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -38,8 +39,19 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState("");
   const [processing, setProcessing] = useState(false);
 
+  useEffect(() => { setMounted(true); }, []);
+
   const total = subtotal();
   const shippingFee = total >= 500 ? 0 : 25;
+
+  if (!mounted) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 lg:px-12 py-24 text-center">
+        <h1 className="font-serif text-4xl mb-6">Checkout</h1>
+        <div className="h-40" />
+      </div>
+    );
+  }
 
   if (items.length === 0 && step !== "confirmation") {
     return (
