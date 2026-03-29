@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getProducts, formatPrice, MOCK_BRANDS } from "@/lib/mock-data";
+import { getProducts, getBrands, formatPrice } from "@/lib/db/queries";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 
 interface ProductsPageProps {
   searchParams: Promise<{ category?: string; brand?: string; tier?: string }>;
@@ -17,17 +18,19 @@ const CATEGORIES = [
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
-  const products = getProducts({
-    category: params.category,
-    brandSlug: params.brand,
-    priceTier: params.tier,
-  });
+  const [products, brands] = await Promise.all([
+    getProducts({
+      category: params.category,
+      brandSlug: params.brand,
+      priceTier: params.tier,
+    }),
+    getBrands(),
+  ]);
 
   const activeCategory = params.category ?? "";
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-      {/* Page Header */}
       <div className="text-center mb-16">
         <h1 className="font-serif text-4xl lg:text-5xl mb-4">
           {params.category ?? "All Products"}
@@ -37,7 +40,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </p>
       </div>
 
-      {/* Filters */}
+      {/* Category filters */}
       <div className="flex flex-wrap justify-center gap-6 mb-16 border-b border-muted pb-6">
         {CATEGORIES.map((cat) => (
           <Link
@@ -54,19 +57,17 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         ))}
       </div>
 
-      {/* Brand Filter */}
+      {/* Brand filters */}
       <div className="flex flex-wrap justify-center gap-4 mb-12">
         <Link
           href={params.category ? `/products?category=${params.category}` : "/products"}
           className={`text-xs tracking-wide px-3 py-1.5 border transition-colors ${
-            !params.brand
-              ? "border-primary text-primary"
-              : "border-muted text-secondary hover:border-primary"
+            !params.brand ? "border-primary text-primary" : "border-muted text-secondary hover:border-primary"
           }`}
         >
           All Brands
         </Link>
-        {MOCK_BRANDS.map((brand) => (
+        {brands.map((brand) => (
           <Link
             key={brand.slug}
             href={`/products?brand=${brand.slug}${params.category ? `&category=${params.category}` : ""}`}
@@ -81,17 +82,15 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         ))}
       </div>
 
-      {/* Product Grid */}
+      {/* Product grid */}
       {products.length > 0 ? (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
           {products.map((product) => (
-            <Link
-              key={product.id}
-              href={`/products/${product.slug}`}
-              className="group"
-            >
-              <div className="aspect-[3/4] bg-surface mb-4 overflow-hidden">
-                <div className="w-full h-full bg-muted group-hover:scale-[1.02] transition-transform duration-500" />
+            <Link key={product.id} href={`/products/${product.slug}`} className="group">
+              <div className="overflow-hidden mb-4">
+                <div className="group-hover:scale-[1.02] transition-transform duration-500">
+                  <ImagePlaceholder aspectRatio="portrait" />
+                </div>
               </div>
               <p className="text-xs tracking-widest uppercase text-secondary mb-1">
                 {product.brand.name}
@@ -100,7 +99,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 {product.name}
               </p>
               <p className="text-sm text-secondary">
-                {formatPrice(product.priceUsd)}
+                {product.prices[0] ? formatPrice(product.prices[0].amount) : ""}
               </p>
             </Link>
           ))}
@@ -108,10 +107,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       ) : (
         <div className="text-center py-24">
           <p className="text-secondary">No products found matching your criteria.</p>
-          <Link
-            href="/products"
-            className="inline-block mt-6 text-sm tracking-widest uppercase border-b border-primary pb-1"
-          >
+          <Link href="/products" className="inline-block mt-6 text-sm tracking-widest uppercase border-b border-primary pb-1">
             View All Products
           </Link>
         </div>
