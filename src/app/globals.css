@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --color-ivory: #faf8f5;
+  --color-charcoal: #1a1a1a;
+  --color-warm-gray: #6b6560;
+  --color-light-gray: #e8e4df;
+  --color-gold: #b8977e;
+  --color-gold-light: #d4c4b0;
+  --color-cream: #f5f0eb;
+}
+
+@theme inline {
+  --color-background: var(--color-ivory);
+  --color-foreground: var(--color-charcoal);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+
+  --color-primary: var(--color-charcoal);
+  --color-secondary: var(--color-warm-gray);
+  --color-accent: var(--color-gold);
+  --color-accent-light: var(--color-gold-light);
+  --color-muted: var(--color-light-gray);
+  --color-surface: var(--color-cream);
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Luxury typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Smooth transitions for luxury feel */
+a, button {
+  transition: all 0.3s ease;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-gold-light);
+  color: var(--color-charcoal);
+}
