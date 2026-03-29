@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CartCount } from "./cart-count";
 import { AuthButton } from "./auth-button";
+import { NotificationBell } from "./notification-bell";
 
 const NAV_LINKS = [
   { href: "/brands", label: "Brands" },
@@ -59,6 +60,7 @@ export function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-5">
+          <NotificationBell />
           <AuthButton />
           <CartCount />
         </div>
