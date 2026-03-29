@@ -61,12 +61,19 @@ test.describe("Luxury Shopping Flow", () => {
     await page.getByRole("link", { name: "Proceed to Checkout" }).click();
     await expect(page).toHaveURL("/checkout");
 
-    // Shipping step
+    // Shipping step — fill required fields
     await expect(page.getByText("Shipping Address")).toBeVisible();
+    const inputs = page.locator("input[type='text']");
+    await inputs.nth(0).fill("Test");      // firstName
+    await inputs.nth(1).fill("User");      // lastName
+    await inputs.nth(2).fill("123 Test St"); // line1
+    await inputs.nth(3).fill("Seoul");     // city
+    await inputs.nth(4).fill("06241");     // postalCode
+    await inputs.nth(5).fill("010-0000"); // phone
     await page.getByRole("button", { name: "Continue to Payment" }).click();
 
     // Payment step
-    await expect(page.getByText("Credit Card")).toBeVisible();
+    await expect(page.getByText("Credit Card").first()).toBeVisible();
 
     // Place order
     await page.getByRole("button", { name: /Place Order/ }).click();

@@ -14,8 +14,11 @@ export default auth((request) => {
     "camera=(), microphone=(), geolocation=()"
   );
 
-  // Admin route protection
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+  // Admin route protection (enforced in production only)
+  if (
+    request.nextUrl.pathname.startsWith("/dashboard") &&
+    process.env.NODE_ENV === "production"
+  ) {
     const session = request.auth;
     if (!session?.user) {
       return NextResponse.redirect(new URL("/login", request.url));

@@ -37,6 +37,13 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
+/* Shimmer loading animation */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Smooth transitions for luxury feel */
 a, button {
   transition: all 0.3s ease;
