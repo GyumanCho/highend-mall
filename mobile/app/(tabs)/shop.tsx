@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable, StyleSheet, Dimensions } from "react-native";
+import { View, Text, FlatList, Pressable, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -13,9 +13,9 @@ const PRODUCTS = [
   { id: "p3", slug: "celine-triomphe-shoulder-bag-shiny-calfskin", name: "Triomphe Shoulder Bag", brand: "Celine", price: "$4,150", tier: "CORE", image: "https://images.unsplash.com/photo-1614179689702-355944cd0918?w=400&q=80" },
   { id: "p4", slug: "the-row-margaux-15-smooth-calfskin", name: "Margaux 15 Bag", brand: "The Row", price: "$5,490", tier: "ULTRA", image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=400&q=80" },
   { id: "p5", slug: "jacquemus-le-chiquito-long-smooth-leather", name: "Le Chiquito Long", brand: "Jacquemus", price: "$495", tier: "ACCESSIBLE", image: "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=400&q=80" },
-] as const;
+];
 
-const BRANDS = ["All", "Gucci", "Bottega Veneta", "Celine", "The Row", "Jacquemus"] as const;
+const BRANDS = ["All", "Gucci", "Bottega Veneta", "Celine", "The Row", "Jacquemus"];
 
 export default function ShopScreen() {
   const [activeBrand, setActiveBrand] = useState("All");
@@ -24,24 +24,24 @@ export default function ShopScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Brand filter */}
-      <FlatList
+      {/* Brand filter — ScrollView (not FlatList) to avoid nesting issues */}
+      <ScrollView
         horizontal
-        data={BRANDS}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.filterRow}
-        renderItem={({ item }) => (
+      >
+        {BRANDS.map((brand) => (
           <Pressable
-            onPress={() => setActiveBrand(item)}
-            style={[styles.filterChip, activeBrand === item && styles.filterChipActive]}
+            key={brand}
+            onPress={() => setActiveBrand(brand)}
+            style={[styles.filterChip, activeBrand === brand && styles.filterChipActive]}
           >
-            <Text style={[styles.filterText, activeBrand === item && styles.filterTextActive]}>
-              {item}
+            <Text style={[styles.filterText, activeBrand === brand && styles.filterTextActive]}>
+              {brand}
             </Text>
           </Pressable>
-        )}
-        keyExtractor={(item) => item}
-      />
+        ))}
+      </ScrollView>
 
       <Text style={styles.count}>{filtered.length} pieces</Text>
 
