@@ -2,7 +2,9 @@
 // For iOS simulator: http://localhost:3000
 // For Android emulator: http://10.0.2.2:3000
 // For physical device: http://<your-ip>:3000
-const API_BASE = "http://localhost:3000";
+import { Platform } from "react-native";
+
+const API_BASE = Platform.OS === "android" ? "http://10.0.2.2:3000" : "http://localhost:3000";
 
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {

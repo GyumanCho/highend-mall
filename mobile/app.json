@@ -4,7 +4,6 @@
     "slug": "maison",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "scheme": "maison",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -21,7 +20,11 @@
       },
       "package": "com.maison.app"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     }
