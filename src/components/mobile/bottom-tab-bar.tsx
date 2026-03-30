@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart-store";
+import { useWishlistStore } from "@/lib/stores/wishlist-store";
 import { useEffect, useState } from "react";
 
 const TABS = [
@@ -25,14 +26,14 @@ const TABS = [
     ),
   },
   {
-    href: "/brands",
-    label: "Brands",
+    href: "/wishlist",
+    label: "Wishlist",
     icon: (active: boolean) => (
       <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
       </svg>
     ),
+    wishlistBadge: true,
   },
   {
     href: "/cart",
@@ -58,6 +59,7 @@ const TABS = [
 export function BottomTabBar() {
   const pathname = usePathname();
   const cartCount = useCartStore((s) => s.itemCount());
+  const wishlistCount = useWishlistStore((s) => s.items.length);
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -84,6 +86,11 @@ export function BottomTabBar() {
               {"badge" in tab && tab.badge && mounted && cartCount > 0 && (
                 <span className="absolute top-1 right-1 w-4 h-4 bg-accent text-white text-[9px] rounded-full flex items-center justify-center">
                   {cartCount}
+                </span>
+              )}
+              {"wishlistBadge" in tab && tab.wishlistBadge && mounted && wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center">
+                  {wishlistCount}
                 </span>
               )}
             </Link>
