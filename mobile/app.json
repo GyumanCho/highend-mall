@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Maison",
+    "slug": "maison",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "maison",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#faf8f5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.maison.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#faf8f5"
+      },
+      "package": "com.maison.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
