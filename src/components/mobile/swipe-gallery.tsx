@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { ProductImage } from "@/components/ui/product-image";
 
 interface SwipeGalleryProps {
-  readonly images: readonly { id: string; type: string; altText: string | null }[];
+  readonly images: readonly { id: string; url: string; type: string; altText: string | null }[];
 }
 
 export function SwipeGallery({ images }: SwipeGalleryProps) {
@@ -19,7 +19,7 @@ export function SwipeGallery({ images }: SwipeGalleryProps) {
     setActiveIndex(index);
   }
 
-  const items = images.length > 0 ? images : [{ id: "placeholder", type: "PRODUCT", altText: null }];
+  const items = images.length > 0 ? images : [{ id: "placeholder", url: "", type: "PRODUCT", altText: null }];
 
   return (
     <div className="lg:hidden">
@@ -34,9 +34,11 @@ export function SwipeGallery({ images }: SwipeGalleryProps) {
             key={image.id}
             className="w-full shrink-0 snap-center"
           >
-            <ImagePlaceholder
+            <ProductImage
+              src={image.url}
+              alt={image.altText ?? image.type}
               aspectRatio="square"
-              label={image.altText ?? image.type}
+              priority={i === 0}
             />
           </div>
         ))}

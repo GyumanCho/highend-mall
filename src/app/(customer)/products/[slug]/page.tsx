@@ -4,7 +4,7 @@ import { getProductBySlug, getProductsByBrand, formatPrice } from "@/lib/db/quer
 import { AddToCartButton } from "@/components/customer/add-to-cart-button";
 import { WishlistButton } from "@/components/customer/wishlist-button";
 import { ProductReviews } from "@/components/customer/product-reviews";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { ProductImage } from "@/components/ui/product-image";
 import { SwipeGallery } from "@/components/mobile/swipe-gallery";
 import { StickyCTA } from "@/components/mobile/sticky-cta";
 
@@ -58,10 +58,10 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Images (desktop only) */}
         <div className="hidden lg:block space-y-4">
-          <ImagePlaceholder aspectRatio="square" />
+          <ProductImage src={product.images[0]?.url} alt={product.name} aspectRatio="square" priority />
           <div className="grid grid-cols-3 gap-4">
             {product.images.slice(0, 3).map((img) => (
-              <ImagePlaceholder key={img.id} aspectRatio="square" label={img.type} />
+              <ProductImage key={img.id} src={img.url} alt={img.altText ?? img.type} aspectRatio="square" />
             ))}
           </div>
         </div>
@@ -155,7 +155,7 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
                 <Link key={p.id} href={`/products/${p.slug}`} className="group">
                   <div className="overflow-hidden mb-4">
                     <div className="group-hover:scale-[1.02] transition-transform duration-500">
-                      <ImagePlaceholder aspectRatio="portrait" />
+                      <ProductImage src={p.images[0]?.url} alt={p.name} />
                     </div>
                   </div>
                   <p className="text-xs tracking-widest uppercase text-secondary mb-1">{p.brand.name}</p>

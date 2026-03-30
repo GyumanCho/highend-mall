@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBrandBySlug, getProductsByBrand, formatPrice } from "@/lib/db/queries";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { ProductImage } from "@/components/ui/product-image";
 
 interface BrandPageProps {
   params: Promise<{ slug: string }>;
@@ -98,7 +98,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                 <Link key={product.id} href={`/products/${product.slug}`} className="group">
                   <div className="overflow-hidden mb-4">
                     <div className="group-hover:scale-[1.02] transition-transform duration-500">
-                      <ImagePlaceholder aspectRatio="portrait" />
+                      <ProductImage src={product.images[0]?.url} alt={product.name} />
                     </div>
                   </div>
                   <p className="text-sm mb-2 group-hover:underline underline-offset-4">{product.name}</p>

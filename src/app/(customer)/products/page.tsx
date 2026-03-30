@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getProducts, getBrands, formatPrice } from "@/lib/db/queries";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { ProductImage } from "@/components/ui/product-image";
 
 interface ProductsPageProps {
   searchParams: Promise<{ category?: string; brand?: string; tier?: string }>;
@@ -89,7 +89,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <Link key={product.id} href={`/products/${product.slug}`} className="group">
               <div className="overflow-hidden mb-4">
                 <div className="group-hover:scale-[1.02] transition-transform duration-500">
-                  <ImagePlaceholder aspectRatio="portrait" />
+                  <ProductImage src={product.images[0]?.url} alt={product.name} />
                 </div>
               </div>
               <p className="text-xs tracking-widest uppercase text-secondary mb-1">
