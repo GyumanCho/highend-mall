@@ -49,6 +49,30 @@ a, button {
   transition: all 0.3s ease;
 }
 
+/* Mobile safe area for bottom tab bar */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Prevent overscroll bounce on iOS */
+html {
+  overscroll-behavior: none;
+}
+
+/* Touch action optimization */
+.touch-pan-y {
+  touch-action: pan-y;
+}
+
+/* Hide scrollbar for horizontal scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Selection color */
 ::selection {
   background-color: var(--color-gold-light);

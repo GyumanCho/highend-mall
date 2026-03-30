@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Phase 2 Features", () => {
   test("search modal opens and finds products", async ({ page }) => {
     await page.goto("/");
-    await page.getByLabel("Search").click();
+    await page.getByLabel("Search").first().click();
     await expect(page.getByPlaceholder("Search brands, products, materials...")).toBeVisible();
     await page.fill('input[placeholder="Search brands, products, materials..."]', "gucci");
     await expect(page.locator("[href='/brands/gucci']").first()).toBeVisible();
@@ -65,7 +65,7 @@ test.describe("Phase 2 Features", () => {
 
   test("notification bell dropdown", async ({ page }) => {
     await page.goto("/");
-    await page.getByLabel("Notifications").click();
+    await page.getByLabel("Notifications").first().click();
     await expect(page.getByText("Mark all read")).toBeVisible();
   });
 });

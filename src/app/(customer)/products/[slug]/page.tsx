@@ -5,6 +5,8 @@ import { AddToCartButton } from "@/components/customer/add-to-cart-button";
 import { WishlistButton } from "@/components/customer/wishlist-button";
 import { ProductReviews } from "@/components/customer/product-reviews";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { SwipeGallery } from "@/components/mobile/swipe-gallery";
+import { StickyCTA } from "@/components/mobile/sticky-cta";
 
 interface ProductDetailProps {
   params: Promise<{ slug: string }>;
@@ -40,10 +42,22 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
         </ol>
       </nav>
 
+      {/* Mobile Swipe Gallery */}
+      <SwipeGallery images={product.images} />
+
+      {/* Mobile Sticky CTA */}
+      <StickyCTA
+        productId={product.id}
+        name={product.name}
+        brand={product.brand.name}
+        price={priceAmount}
+        slug={product.slug}
+      />
+
       {/* Product Layout */}
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-        {/* Images */}
-        <div className="space-y-4">
+        {/* Images (desktop only) */}
+        <div className="hidden lg:block space-y-4">
           <ImagePlaceholder aspectRatio="square" />
           <div className="grid grid-cols-3 gap-4">
             {product.images.slice(0, 3).map((img) => (

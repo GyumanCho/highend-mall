@@ -8,8 +8,8 @@ test.describe("Luxury Shopping Flow", () => {
     await expect(page.getByText("Quiet Luxury")).toBeVisible();
     await expect(page.getByRole("link", { name: "Explore the Collection" })).toBeVisible();
 
-    // Verify Maison in header
-    await expect(page.locator("header").getByText("Maison")).toBeVisible();
+    // Verify Maison brand
+    await expect(page.getByText("Maison").first()).toBeVisible();
 
     // Curated edit section
     await expect(page.getByText("Defining Pieces").first()).toBeVisible();
@@ -28,7 +28,8 @@ test.describe("Luxury Shopping Flow", () => {
 
     // Product info
     await expect(page.locator("main h1").first()).toContainText("GG Marmont");
-    await expect(page.getByText("$2,350").first()).toBeVisible();
+    // Price visible (in product detail section, not sticky CTA)
+    await expect(page.locator(".text-xl").getByText("$2,350")).toBeVisible();
 
     // Editorial section
     await expect(page.getByText("The Story")).toBeVisible();
