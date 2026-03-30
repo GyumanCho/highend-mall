@@ -81,8 +81,8 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="space-y-3">
+          {/* Actions — desktop only (mobile uses StickyCTA) */}
+          <div className="hidden lg:block space-y-3">
             <AddToCartButton
               productId={product.id}
               name={product.name}
