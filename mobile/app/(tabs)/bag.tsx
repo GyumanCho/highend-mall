@@ -1,5 +1,6 @@
 import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useCartStore } from "@/lib/stores";
 import { colors, fonts, spacing } from "@/lib/theme";
@@ -57,7 +58,7 @@ export default function BagScreen() {
           <Text style={styles.totalLabel}>Subtotal</Text>
           <Text style={styles.totalAmount}>${total.toLocaleString()}</Text>
         </View>
-        <Pressable style={styles.checkoutBtn}>
+        <Pressable style={styles.checkoutBtn} onPress={() => router.push("/checkout")}>
           <Text style={styles.checkoutText}>CHECKOUT</Text>
         </Pressable>
       </View>
