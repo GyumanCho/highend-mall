@@ -95,9 +95,9 @@ const PRODUCTS = [
     collection: "FW26",
     priceUsd: 2350, priceKrw: 3120000,
     images: [
-      { url: "/products/gucci-marmont-front.jpg", type: "PRODUCT" as const, altText: "GG Marmont front view" },
-      { url: "/products/gucci-marmont-detail.jpg", type: "DETAIL" as const, altText: "GG Marmont hardware detail" },
-      { url: "/products/gucci-marmont-lifestyle.jpg", type: "LIFESTYLE" as const, altText: "GG Marmont styled" },
+      { url: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80", type: "PRODUCT" as const, altText: "GG Marmont front view" },
+      { url: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800&q=80", type: "DETAIL" as const, altText: "GG Marmont hardware detail" },
+      { url: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80", type: "LIFESTYLE" as const, altText: "GG Marmont styled" },
     ],
   },
   {
@@ -121,9 +121,9 @@ const PRODUCTS = [
     collection: "FW26",
     priceUsd: 3200, priceKrw: 4250000,
     images: [
-      { url: "/products/bv-cassette-front.jpg", type: "PRODUCT" as const, altText: "Cassette bag front" },
-      { url: "/products/bv-cassette-detail.jpg", type: "DETAIL" as const, altText: "Cassette intreccio detail" },
-      { url: "/products/bv-cassette-model.jpg", type: "MODEL" as const, altText: "Cassette on model" },
+      { url: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80", type: "PRODUCT" as const, altText: "Cassette bag front" },
+      { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800&q=80", type: "DETAIL" as const, altText: "Cassette intreccio detail" },
+      { url: "https://images.unsplash.com/photo-1612902456551-404b5b2e20be?w=800&q=80", type: "MODEL" as const, altText: "Cassette on model" },
     ],
   },
   {
@@ -147,9 +147,9 @@ const PRODUCTS = [
     collection: "FW26",
     priceUsd: 4150, priceKrw: 5500000,
     images: [
-      { url: "/products/celine-triomphe-front.jpg", type: "PRODUCT" as const, altText: "Triomphe bag front" },
-      { url: "/products/celine-triomphe-clasp.jpg", type: "DETAIL" as const, altText: "Triomphe clasp detail" },
-      { url: "/products/celine-triomphe-styled.jpg", type: "LIFESTYLE" as const, altText: "Triomphe styled" },
+      { url: "https://images.unsplash.com/photo-1614179689702-355944cd0918?w=800&q=80", type: "PRODUCT" as const, altText: "Triomphe bag front" },
+      { url: "https://images.unsplash.com/photo-1575032617751-6ddec2089882?w=800&q=80", type: "DETAIL" as const, altText: "Triomphe clasp detail" },
+      { url: "https://images.unsplash.com/photo-1606522754091-a05c6b5f21e3?w=800&q=80", type: "LIFESTYLE" as const, altText: "Triomphe styled" },
     ],
   },
   {
@@ -173,9 +173,9 @@ const PRODUCTS = [
     collection: "FW26",
     priceUsd: 5490, priceKrw: 7290000,
     images: [
-      { url: "/products/row-margaux-front.jpg", type: "PRODUCT" as const, altText: "Margaux 15 front" },
-      { url: "/products/row-margaux-interior.jpg", type: "DETAIL" as const, altText: "Margaux interior" },
-      { url: "/products/row-margaux-lifestyle.jpg", type: "LIFESTYLE" as const, altText: "Margaux lifestyle" },
+      { url: "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80", type: "PRODUCT" as const, altText: "Margaux 15 front" },
+      { url: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=800&q=80", type: "DETAIL" as const, altText: "Margaux interior" },
+      { url: "https://images.unsplash.com/photo-1559563458-527698bf5295?w=800&q=80", type: "LIFESTYLE" as const, altText: "Margaux lifestyle" },
     ],
   },
   {
@@ -199,9 +199,9 @@ const PRODUCTS = [
     collection: "FW26",
     priceUsd: 495, priceKrw: 659000,
     images: [
-      { url: "/products/jacquemus-chiquito-front.jpg", type: "PRODUCT" as const, altText: "Le Chiquito front" },
-      { url: "/products/jacquemus-chiquito-buckle.jpg", type: "DETAIL" as const, altText: "Le Chiquito buckle" },
-      { url: "/products/jacquemus-chiquito-model.jpg", type: "MODEL" as const, altText: "Le Chiquito on model" },
+      { url: "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=800&q=80", type: "PRODUCT" as const, altText: "Le Chiquito front" },
+      { url: "https://images.unsplash.com/photo-1604177091072-fa7fbc09e281?w=800&q=80", type: "DETAIL" as const, altText: "Le Chiquito buckle" },
+      { url: "https://images.unsplash.com/photo-1581404917879-53e19259fdda?w=800&q=80", type: "MODEL" as const, altText: "Le Chiquito on model" },
     ],
   },
 ];

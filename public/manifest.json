@@ -1,0 +1,28 @@
+{
+  "name": "Maison — Curated Luxury Fashion",
+  "short_name": "Maison",
+  "description": "Discover curated luxury fashion from the world's most prestigious houses.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f5",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "ko",
+  "dir": "ltr"
+}
