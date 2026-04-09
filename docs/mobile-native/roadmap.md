@@ -138,29 +138,42 @@
 
 ---
 
-## Phase 2 — 백엔드 연결 (1.5–2주)
+## Phase 2 — 백엔드 연결 (1.5–2주, **스캐폴딩 완료** 2026-04-09)
 
 ### 목적
 모바일이 **실제 데이터**로 동작. Mock 데이터 완전 제거.
 
-### 작업
-- [ ] `apps/mobile/lib/trpc.ts` 생성
+### 진행 상황
+
+#### ✅ 완료
+- [x] `apps/web/src/app/api/trpc/[trpc]/route.ts` 신규 작성
+  - `fetchRequestHandler` 기반 tRPC HTTP 엔드포인트
+  - CORS 미들웨어 (dev: `*`, prod: `maison://` scheme + 도메인 화이트리스트)
+  - OPTIONS preflight 처리
+  - createContext 뼈대 (Phase 3에서 JWT 미들웨어 확장)
+- [x] `apps/mobile/package.json`에 tRPC client 의존성 추가
+  - @trpc/client, @trpc/react-query, @trpc/server, @tanstack/react-query, @repo/api
+- [x] `apps/mobile/lib/trpc.ts` 생성
   - `createTRPCReact<AppRouter>()` with httpBatchLink
-  - **`import type { AppRouter } from "@repo/api/types"`** (value import 금지)
-- [ ] `apps/mobile/app/_layout.tsx`에 `QueryClientProvider`, `trpc.Provider` 추가
-- [ ] 환경 변수: `app.json` `extra.apiBaseUrl` 설정
-  - dev: LAN IP (`http://192.168.x.x:3000`) — 물리 디바이스 지원
-  - staging/prod: 각 환경별 URL
-- [ ] **`apps/web/app/api/trpc/[trpc]/route.ts`에 CORS 미들웨어 추가** (R22 대비)
-  - dev: `*`, prod: deep link scheme + 내부 도메인 화이트리스트
-- [ ] `apps/mobile/app/product/[slug].tsx` — mock PRODUCTS 제거
-  ```typescript
-  const { data: product } = trpc.product.bySlug.useQuery({ slug });
-  ```
-- [ ] `(tabs)/shop.tsx` — 상품 목록을 tRPC로 가져오기
-- [ ] `(tabs)/index.tsx` (home) — 피처드 상품 tRPC로 연동
-- [ ] 에러 바운더리 추가
+  - **`import type { AppRouter } from "@repo/api/types"`** (type-only)
+  - 플랫폼별 API URL 해석 (Android 에뮬레이터 10.0.2.2 자동 치환)
+  - `createTrpcClient()` 팩토리 패턴 (Provider에서 안정적 ref)
+- [x] `apps/mobile/app/_layout.tsx`에 `QueryClientProvider`, `trpc.Provider` 추가
+  - QueryClient 기본 staleTime 1분, retry 1
+- [x] `apps/mobile/app.json`에 `extra.apiBaseUrl` 설정
+- [x] **`apps/mobile/app/product/[slug].tsx`** — 5개 mock PRODUCTS 완전 제거, `trpc.product.getBySlug.useQuery`로 교체
+  - 로딩(ActivityIndicator)/에러/빈 상태 처리
+  - TS2589 deep instantiation 회피용 얕은 로컬 타입 단절
+- [x] 전체 검증: turbo type-check 6/6, lint 0/0, vitest 84/84, build 29p, E2E 18/18
+
+#### ⏳ 남은 작업
+- [ ] `(tabs)/shop.tsx` — 상품 목록을 `trpc.product.list` tRPC 호출로 교체
+- [ ] `(tabs)/index.tsx` (home) — 피처드 상품 tRPC 연동
+- [ ] `(tabs)/wishlist.tsx` — 현재 로컬 store만 사용, Phase 3 인증 후 서버 동기화 예정
+- [ ] Brand 화면 (아직 모바일에 없음) — 신규 화면 생성 시 `trpc.brand.*` 사용
+- [ ] 에러 바운더리 추가 (루트 _layout)
 - [ ] 로딩 스켈레톤 UI 추가 (원형 스피너 금지 — mobile-design-system §6.3)
+- [ ] 실기기/시뮬레이터에서 tRPC 호출 end-to-end 검증 (사용자 환경)
 
 ### 완료 기준
 - [ ] `grep -r "PRODUCTS =" apps/mobile/app` 결과 없음
