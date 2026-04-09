@@ -21,6 +21,10 @@ out/
 # turborepo
 .turbo/
 
+# playwright
+playwright-report/
+blob-report/
+
 # production
 /build
 

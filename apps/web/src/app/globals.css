@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
+/*
+ * Brand tokens (Tier 1) — 단일 소스: packages/design-tokens/src/brand/colors.ts
+ * 변경 시 packages/design-tokens와 반드시 동기화할 것.
+ * 모바일은 packages/design-tokens/brand를 직접 import해서 참조함.
+ * Tailwind 4는 @theme inline에서 CSS 변수를 받으므로 이 파일이 웹 소비 경로.
+ */
 :root {
-  --color-ivory: #faf8f5;
-  --color-charcoal: #1a1a1a;
-  --color-warm-gray: #6b6560;
-  --color-light-gray: #e8e4df;
-  --color-gold: #b8977e;
-  --color-gold-light: #d4c4b0;
-  --color-cream: #f5f0eb;
+  --color-ivory: #faf8f5;       /* brandColors.ivory */
+  --color-charcoal: #1a1a1a;    /* brandColors.charcoal */
+  --color-warm-gray: #6b6560;   /* brandColors.warmGray */
+  --color-light-gray: #e8e4df;  /* brandColors.lightGray */
+  --color-gold: #b8977e;        /* brandColors.gold */
+  --color-gold-light: #d4c4b0;  /* brandColors.goldLight */
+  --color-cream: #f5f0eb;       /* brandColors.cream */
 }
 
 @theme inline {

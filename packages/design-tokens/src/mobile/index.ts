@@ -1,6 +1,12 @@
-// Tier 2 Platform Tokens (Mobile) — 모바일 전용 스페이싱/타이포 스케일.
+// Tier 2 Platform Tokens (Mobile) — 모바일 전용 스페이싱/타이포 스케일/상태 컬러.
 // 웹에서 import 금지. ESLint boundary rule로 강제.
 // 자세한 원칙은 docs/mobile-native/mobile-design-system.md 참조.
+
+// 상태 컬러 (error/success) — 브랜드 팔레트 외의 기능적 indicator
+export const mobileStateColors = {
+  red: "#ef4444",
+  green: "#16a34a",
+} as const;
 
 export const mobileSpacing = {
   page: 16,
