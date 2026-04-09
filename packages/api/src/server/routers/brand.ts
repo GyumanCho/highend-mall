@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { router, publicProcedure } from "../trpc";
-import { prisma } from "@/lib/db/client";
+import { prisma } from "@repo/db";
 
 export const brandRouter = router({
   list: publicProcedure

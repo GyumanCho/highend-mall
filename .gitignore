@@ -11,11 +11,15 @@ node_modules/
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
+test-results/
 
 # next.js
-/.next/
-/out/
+.next/
+out/
+
+# turborepo
+.turbo/
 
 # production
 /build
@@ -48,3 +52,6 @@ _workspace/
 next-env.d.ts
 
 /src/generated/prisma
+
+# Prisma generated client (under monorepo node_modules)
+packages/db/src/generated/
