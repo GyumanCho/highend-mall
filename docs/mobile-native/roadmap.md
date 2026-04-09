@@ -35,15 +35,16 @@
   - **react-native@^0.83.4는 그대로 (SDK 55 공식 호환 확인)**
 - [x] `mobile/app.json`에서 `newArchEnabled: true` 제거 (SDK 55 deprecated)
 - [x] **`expo-doctor` 17/17 ✅ 통과**
+- [x] **`tsc --noEmit` 타입 체크 ✅ 통과**
+- [x] `babel-plugin-module-resolver` 사용 검증 — 14곳에서 `@/` alias 사용 중, **유지** 결정 (Phase 1에서 재검토)
+- [x] `mobile/temp-app/` 삭제 (Expo SDK 54 보일러플레이트, untracked)
+- [x] **New Architecture 호환성 매트릭스 작성** → [new-arch-compatibility.md](./new-arch-compatibility.md)
 
-#### ⏳ 남은 작업
-- [ ] iOS 시뮬레이터 cold start 성공
-- [ ] Android 에뮬레이터 cold start 성공
-- [ ] **물리 디바이스** cold start 성공 (Metro LAN 연결 검증)
-- [ ] Reanimated 4 + New Arch 런타임 검증 (실제 화면 진입)
-- [ ] 사용할 모든 라이브러리의 New Arch 호환성 매트릭스 작성
-- [ ] `mobile/temp-app/` 디렉터리 정리 결정 (삭제 또는 아카이브)
-- [ ] `mobile/package.json`의 `babel-plugin-module-resolver` 사용 여부 확인 및 정리
+#### ⏳ 남은 작업 (사용자 디바이스 필요)
+- [ ] iOS 시뮬레이터 cold start (`npx expo start --ios`)
+- [ ] Android 에뮬레이터 cold start (`npx expo start --android`)
+- [ ] **물리 디바이스** cold start (Metro LAN 연결 검증)
+- [ ] Reanimated 4 + New Arch 런타임 검증 (실제 화면 진입 + worklet 동작)
 
 ### 확정된 결정 (Phase 0 진입 조건)
 - ✅ Reanimated **v4 + New Arch** 채택 확정 (3.x 다운그레이드 옵션 폐기)

@@ -9,9 +9,10 @@
 | 1 | [research.md](./research.md) | 현재 코드베이스 분석, 재사용 가능성, 핵심 발견 |
 | 2 | [architecture.md](./architecture.md) | 모노레포 + tRPC + Expo 아키텍처 설계, 디자인 토큰 2-layer |
 | 3 | [reuse-strategy.md](./reuse-strategy.md) | 웹 코드 재사용 매트릭스 및 전략 (**디자인 재사용 = 0%**) |
-| 4 | [mobile-design-system.md](./mobile-design-system.md) | 모바일 전용 디자인 원칙·패턴·규칙 (신규) |
-| 5 | [roadmap.md](./roadmap.md) | Phase 0~6 실행 로드맵 |
-| 6 | [risks.md](./risks.md) | 리스크 매트릭스 및 완화책 |
+| 4 | [mobile-design-system.md](./mobile-design-system.md) | 모바일 전용 디자인 원칙·패턴·규칙 |
+| 5 | [new-arch-compatibility.md](./new-arch-compatibility.md) | New Architecture 라이브러리 호환성 매트릭스 |
+| 6 | [roadmap.md](./roadmap.md) | Phase 0~6 실행 로드맵 |
+| 7 | [risks.md](./risks.md) | 리스크 매트릭스 및 완화책 |
 
 ## 한 줄 결론
 
