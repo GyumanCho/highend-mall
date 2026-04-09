@@ -1,16 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/stores/cart-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export function CartCount() {
   const itemCount = useCartStore((s) => s.itemCount());
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   return (
     <Link

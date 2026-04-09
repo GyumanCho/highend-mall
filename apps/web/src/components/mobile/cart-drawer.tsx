@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/lib/stores/cart-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { formatPrice } from "@/lib/mock-data";
 
 interface CartDrawerProps {
@@ -12,8 +12,7 @@ interface CartDrawerProps {
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, subtotal } = useCartStore();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
 
   const total = mounted ? subtotal() : 0;
 

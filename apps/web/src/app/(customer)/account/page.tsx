@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { formatPrice } from "@/lib/mock-data";
 
 // Mock customer data (replace with auth session)
@@ -47,8 +47,7 @@ const TIER_CONFIG = {
 
 export default function AccountPage() {
   const { items: wishlistItems, removeItem } = useWishlistStore();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
   const customer = MOCK_CUSTOMER;
   const tierConfig = TIER_CONFIG[customer.tier];
   const progressToNext = tierConfig.nextTier

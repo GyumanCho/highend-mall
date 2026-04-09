@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProductBySlug, formatPrice } from "@/lib/mock-data";
+import { getProductBySlug } from "@/lib/mock-data";
 
 interface Props {
   params: Promise<{ slug: string }>;

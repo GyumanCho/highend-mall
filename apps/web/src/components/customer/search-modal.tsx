@@ -14,12 +14,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    } else {
+    if (!isOpen) return;
+    const timer = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(timer);
+  }, [isOpen]);
+
+  // Reset query when modal closes — React 19 권장 "setState during render" 패턴.
+  // 이전 값을 state로 추적하고 prop 변화 감지 시 동기적으로 state 갱신.
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (!isOpen && query !== "") {
       setQuery("");
     }
-  }, [isOpen]);
+  }
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {

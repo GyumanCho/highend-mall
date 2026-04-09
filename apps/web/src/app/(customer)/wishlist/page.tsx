@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { formatPrice } from "@/lib/mock-data";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 
 export default function WishlistPage() {
   const { items, removeItem } = useWishlistStore();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
 
   if (!mounted) {
     return (

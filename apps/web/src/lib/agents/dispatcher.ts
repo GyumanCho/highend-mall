@@ -1,7 +1,6 @@
 import {
   PIPELINES,
   type AgentJob,
-  type AgentName,
   type PipelineType,
 } from "./types";
 

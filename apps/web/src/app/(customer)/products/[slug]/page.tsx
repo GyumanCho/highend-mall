@@ -25,7 +25,6 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
   const defaultPrice = product.prices.find((p) => p.isDefault) ?? product.prices[0];
   const priceAmount = defaultPrice ? Number(defaultPrice.amount) : 0;
   const materials = product.materials as Record<string, string> | null;
-  const specs = product.specifications as Record<string, string> | null;
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">

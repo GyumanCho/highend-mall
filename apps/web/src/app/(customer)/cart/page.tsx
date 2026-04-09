@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/stores/cart-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { formatPrice } from "@/lib/mock-data";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, subtotal, clearCart } =
     useCartStore();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
 
   if (!mounted) {
     return (

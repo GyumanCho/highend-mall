@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useWishlistStore } from "@/lib/stores/wishlist-store";
-import { useEffect, useState } from "react";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 const TABS = [
   {
@@ -60,8 +60,7 @@ export function BottomTabBar() {
   const pathname = usePathname();
   const cartCount = useCartStore((s) => s.itemCount());
   const wishlistCount = useWishlistStore((s) => s.items.length);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";

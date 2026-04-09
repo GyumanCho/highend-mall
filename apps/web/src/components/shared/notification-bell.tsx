@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useNotificationStore } from "@/lib/stores/notification-store";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export function NotificationBell() {
   const notifications = useNotificationStore((s) => s.notifications);
@@ -10,9 +11,7 @@ export function NotificationBell() {
   const markRead = useNotificationStore((s) => s.markRead);
   const markAllRead = useNotificationStore((s) => s.markAllRead);
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useIsClient();
 
   if (!mounted) {
     return (

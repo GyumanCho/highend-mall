@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useOrderStore, type ShippingAddress } from "@/lib/stores/order-store";
 import { formatPrice } from "@/lib/mock-data";
@@ -27,7 +26,6 @@ const EMPTY_ADDRESS: ShippingAddress = {
 };
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, subtotal, clearCart } = useCartStore();
   const { createOrder } = useOrderStore();
 
@@ -142,7 +140,8 @@ export default function CheckoutPage() {
   function updateAddress(field: keyof ShippingAddress, value: string) {
     setAddress({ ...address, [field]: value });
     if (errors[field]) {
-      const { [field]: _, ...rest } = errors;
+      const { [field]: _removed, ...rest } = errors;
+      void _removed;
       setErrors(rest);
     }
   }
