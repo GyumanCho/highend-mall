@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "maison",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#faf8f5"
     },
@@ -23,7 +22,8 @@
     "plugins": [
       "expo-router",
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true

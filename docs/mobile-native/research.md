@@ -54,20 +54,23 @@ src/app/
 
 **프레임워크 스택**
 ```
-Expo                         55.0.9
-Expo Router                  55.0.8
-react-native                 ^0.83.4  ⚠️ Expo SDK 55 공식 RN 버전과 불일치 의심
-react                        19.2
-react-native-reanimated      4.2.1    ⚠️ New Architecture 강제
-react-native-worklets        0.7.2
-react-native-gesture-handler 2.30.1
-react-native-safe-area-context 5.6.2
-react-native-screens         4.23.0
-expo-image, expo-haptics, expo-font, expo-linking, expo-splash-screen
-@expo/vector-icons           15.1.1
-zustand                      5
+Expo                         ~55.0.12  ✅ SDK 55 정렬됨 (Phase 0 작업 후)
+Expo Router                  ~55.0.11
+react-native                 ^0.83.4   ✅ SDK 55 공식 호환 버전
+react                        ^19.2.0
+react-native-reanimated      ^4.2.1    ✅ New Architecture (SDK 55 기본)
+react-native-worklets        ^0.7.2
+react-native-gesture-handler ^2.30.1
+react-native-safe-area-context ~5.6.2
+react-native-screens         ~4.23.0
+expo-haptics ~55.0.13, expo-image ~55.0.8, expo-linking ~55.0.11
+expo-splash-screen ~55.0.16, expo-status-bar ~55.0.5, expo-font, expo-asset, expo-constants, expo-file-system
+@expo/vector-icons           ^15.1.1
+zustand                      ^5.0.12
 babel-plugin-module-resolver
 ```
+
+> **Phase 0 결과**: `npx expo install --fix` 실행 → 12 + 7개 모듈 SDK 55 호환 버전으로 정렬. `expo-doctor` 17/17 통과.
 
 **구현된 화면 (10개 파일)**
 ```
@@ -113,18 +116,24 @@ mobile/lib/
 
 **증거**: `mobile/app/product/[slug].tsx` L13-84에 5개 상품이 TypeScript `Record`로 하드코딩. `mobile/lib/api.ts`의 `apiFetch`는 선언되어 있지만 **어디서도 import되지 않음**.
 
-### Finding #2 — 의존성 버전 충돌 (Phase 0 차단)
+### Finding #2 — 의존성 정합성 (Phase 0에서 해결됨) ✅
 
-```json
-{
-  "expo": "^55.0.9",
-  "react-native": "^0.83.4"   // Expo SDK 55는 공식적으로 RN 0.81.x를 지원
-}
+**이전 가정 정정**: 초안에서 `react-native: ^0.83.4`가 Expo SDK 55와 불일치한다고 추정했으나, **이는 오판이었음**. RN 0.83.x는 SDK 55의 공식 호환 버전.
+
+**Phase 0 작업 (2026-04-09 실행)**:
+```bash
+cd mobile && npm install
+./node_modules/.bin/expo install --fix
 ```
 
-**원인 추정**: `98329d3 fix: RN dependency alignment for Expo SDK 55` 커밋에서 의도적으로 올렸거나, 잘못된 버전 범위 지정.
+**결과**:
+- `react-native@^0.83.4` — 변경 없음 (이미 호환)
+- `expo` ^55.0.9 → ~55.0.12
+- 12개 expo-* 모듈 정렬 (haptics, image, linking, router, splash-screen, status-bar 등)
+- TypeScript 5.8.3 → 5.9.2
+- `app.json`에서 `newArchEnabled: true` 제거 (SDK 55에서 deprecated, New Arch 기본 활성화)
 
-**해결**: `cd mobile && npx expo install --fix` — Expo가 올바른 RN 버전으로 정렬.
+**검증**: `expo-doctor` 17/17 ✅ 통과.
 
 ### Finding #3 — Reanimated 4 + New Architecture **확정 채택**
 

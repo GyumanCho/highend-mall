@@ -20,24 +20,30 @@
 
 ---
 
-## Phase 0 — 안정화 (1–1.5주)
+## Phase 0 — 안정화 (1–1.5주, **부분 진행 중**)
 
 ### 목적
 현재 `mobile/` 폴더가 최소한 빌드·실행되는 상태를 보장. 이후 단계의 기반.
 
-### 작업
-- [ ] `cd mobile && npx expo install --fix`
-  - RN 0.83 → Expo SDK 55 공식 버전으로 정렬
-- [ ] `mobile/app.json`의 `newArchEnabled: true` 명시적 설정 (Reanimated 4 전제)
-- [ ] Reanimated 4 + New Arch 동작 검증 (홈 탭 진입)
-- [ ] 사용할 모든 라이브러리의 New Arch 호환성 매트릭스 작성 (gesture-handler, screens, async-storage, 결제 SDK 후보)
+### 진행 상황 (2026-04-09)
+
+#### ✅ 완료
+- [x] `cd mobile && npm install` — 660개 패키지 설치
+- [x] `./node_modules/.bin/expo install --fix` — 12 + 7개 모듈 SDK 55 호환 정렬
+  - expo ~55.0.12, expo-haptics/image/linking/router/splash-screen/status-bar 정렬
+  - TypeScript ~5.9.2
+  - **react-native@^0.83.4는 그대로 (SDK 55 공식 호환 확인)**
+- [x] `mobile/app.json`에서 `newArchEnabled: true` 제거 (SDK 55 deprecated)
+- [x] **`expo-doctor` 17/17 ✅ 통과**
+
+#### ⏳ 남은 작업
 - [ ] iOS 시뮬레이터 cold start 성공
 - [ ] Android 에뮬레이터 cold start 성공
 - [ ] **물리 디바이스** cold start 성공 (Metro LAN 연결 검증)
-- [ ] `.gitignore`에 `mobile/.expo/`, `mobile/temp-app/` 처리 (완료)
+- [ ] Reanimated 4 + New Arch 런타임 검증 (실제 화면 진입)
+- [ ] 사용할 모든 라이브러리의 New Arch 호환성 매트릭스 작성
 - [ ] `mobile/temp-app/` 디렉터리 정리 결정 (삭제 또는 아카이브)
 - [ ] `mobile/package.json`의 `babel-plugin-module-resolver` 사용 여부 확인 및 정리
-- [ ] `expo doctor` 통과
 
 ### 확정된 결정 (Phase 0 진입 조건)
 - ✅ Reanimated **v4 + New Arch** 채택 확정 (3.x 다운그레이드 옵션 폐기)

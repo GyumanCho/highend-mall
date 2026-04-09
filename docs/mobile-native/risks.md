@@ -11,7 +11,7 @@
 | R2 | Admin 스코프 폭주 | **HIGH** | 중 | Phase 0 (결정) |
 | R3 | 결제 게이트웨이 + 앱스토어 정책 | **HIGH** | 중 | Phase 4, 6 |
 | R4 | Reanimated 4 + New Arch 라이브러리 호환 | MEDIUM | 중 | Phase 0 |
-| R5 | RN 0.83 ↔ Expo SDK 55 버전 불일치 | MEDIUM | 확정 | Phase 0 |
+| ~~R5~~ | ~~RN 0.83 ↔ Expo SDK 55 버전 불일치~~ | ✅ 해소 (오판) | — | Phase 0 완료 |
 | R6 | Expo + pnpm monorepo hoisting 이슈 | MEDIUM | 중 | Phase 1 |
 | R7 | Tailwind → StyleSheet 재작성 비용 (NativeWind 미채택) | MEDIUM | 확정 | Phase 4 |
 | R8 | Prisma client 생성 위치 이전 시 타입 에러 | MEDIUM | 중 | Phase 1 |
@@ -94,13 +94,13 @@
 
 ---
 
-### R5 — RN 0.83 ↔ Expo SDK 55 버전 불일치
+### ~~R5~~ — RN 0.83 ↔ Expo SDK 55 버전 불일치 (오판, 해소됨) ✅
 
-**문제**: `mobile/package.json`의 `"react-native": "^0.83.4"`는 Expo SDK 55 공식 지원 RN 버전과 다름.
+**상태**: 2026-04-09 Phase 0에서 검증 결과 **오판으로 확인**.
 
-**완화책**:
-- Phase 0 첫 작업: `cd mobile && npx expo install --fix`
-- 빌드 실패 시 `app.json`의 `sdkVersion`과 `react-native` 버전 교차 검증
+`react-native@^0.83.4`는 Expo SDK 55의 **공식 호환 버전**. `expo install --fix` 실행 시 react-native는 변경되지 않았고, expo-doctor 17/17 통과. 초안의 "RN 0.81.x 지원 추정"은 잘못된 가정이었음.
+
+**남은 부수 효과**: `app.json`의 `newArchEnabled: true`가 SDK 55에서 deprecated 필드로 검증 실패. 제거 후 통과.
 
 ---
 
