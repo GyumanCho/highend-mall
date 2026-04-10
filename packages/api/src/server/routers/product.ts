@@ -15,7 +15,7 @@ export const productRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const { page, limit, category, brandId, priceTier } = input;
+      const { page, limit, category, brandId, priceTier, search } = input;
       const skip = (page - 1) * limit;
 
       const where = {
@@ -23,6 +23,13 @@ export const productRouter = router({
         ...(category && { category: category as never }),
         ...(brandId && { brandId }),
         ...(priceTier && { priceTier: priceTier as never }),
+        ...(search && {
+          OR: [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { description: { contains: search, mode: "insensitive" as const } },
+            { brand: { name: { contains: search, mode: "insensitive" as const } } },
+          ],
+        }),
       };
 
       const [products, total] = await Promise.all([

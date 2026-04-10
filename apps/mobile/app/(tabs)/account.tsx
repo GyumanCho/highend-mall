@@ -16,9 +16,9 @@ import { trpc } from "@/lib/trpc";
 const MENU_ITEMS = [
   { icon: "receipt-outline" as const, label: "Order History", route: "/orders" },
   { icon: "heart-outline" as const, label: "Wishlist", route: "/(tabs)/wishlist" },
-  { icon: "location-outline" as const, label: "Addresses", route: null },
-  { icon: "body-outline" as const, label: "Size Profile", route: null },
-  { icon: "settings-outline" as const, label: "Preferences", route: null },
+  { icon: "location-outline" as const, label: "Addresses", route: "/addresses" },
+  { icon: "body-outline" as const, label: "Size Profile", route: "/size-profile" },
+  { icon: "settings-outline" as const, label: "Preferences", route: "/preferences" },
 ] as const;
 
 export default function AccountScreen() {
@@ -109,6 +109,8 @@ export default function AccountScreen() {
             onPress={() => {
               if (item.route) router.push(item.route as never);
             }}
+            accessibilityRole="button"
+            accessibilityLabel={item.label}
           >
             <Ionicons name={item.icon} size={20} color={colors.charcoal} />
             <Text style={styles.menuLabel}>{item.label}</Text>

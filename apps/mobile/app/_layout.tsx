@@ -1,13 +1,35 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { View, ActivityIndicator } from "react-native";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import {
+  PlayfairDisplay_400Regular,
+  PlayfairDisplay_700Bold,
+} from "@expo-google-fonts/playfair-display";
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+} from "@expo-google-fonts/inter";
 import { colors } from "@/lib/theme";
 import { trpc, createTrpcClient } from "@/lib/trpc";
 import { useAuthStore } from "@/lib/auth";
 import { ErrorBoundary } from "@/components/error-boundary";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_400Regular,
+    PlayfairDisplay_700Bold,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+  });
+
   // QueryClient와 tRPC client는 앱 생명주기 동안 1회 생성 (ref 안정성).
   const [queryClient] = useState(
     () =>
@@ -29,17 +51,29 @@ export default function RootLayout() {
     void hydrate();
   }, [hydrate]);
 
+  const onLayoutReady = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <ErrorBoundary>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <StatusBar style="dark" />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.ivory },
-            }}
-          />
+          <View style={{ flex: 1 }} onLayout={onLayoutReady}>
+            <StatusBar style="dark" />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.ivory },
+              }}
+            />
+          </View>
         </QueryClientProvider>
       </trpc.Provider>
     </ErrorBoundary>

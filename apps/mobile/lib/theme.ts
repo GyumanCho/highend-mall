@@ -19,9 +19,11 @@ export const colors = {
 } as const;
 
 export const fonts = {
-  // 현재: 시스템 폰트 폴백. Phase 4에서 expo-font로 Playfair Display + Inter 번들링.
-  serif: "Georgia",
-  sans: "System",
+  serif: "PlayfairDisplay_400Regular",
+  serifBold: "PlayfairDisplay_700Bold",
+  sans: "Inter_400Regular",
+  sansMedium: "Inter_500Medium",
+  sansSemiBold: "Inter_600SemiBold",
 } as const;
 
 export const spacing = {

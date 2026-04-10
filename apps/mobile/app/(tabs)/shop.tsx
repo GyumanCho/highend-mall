@@ -68,31 +68,36 @@ export default function ShopScreen() {
   return (
     <View style={styles.container}>
       {/* Brand filter */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterRow}
-      >
-        {brandFilter.map((brand) => (
-          <Pressable
-            key={brand}
-            onPress={() => setActiveBrand(brand)}
-            style={[
-              styles.filterChip,
-              activeBrand === brand && styles.filterChipActive,
-            ]}
-          >
-            <Text
+      <View style={styles.filterWrap}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterRow}
+        >
+          {brandFilter.map((brand) => (
+            <Pressable
+              key={brand}
+              onPress={() => setActiveBrand(brand)}
               style={[
-                styles.filterText,
-                activeBrand === brand && styles.filterTextActive,
+                styles.filterChip,
+                activeBrand === brand && styles.filterChipActive,
               ]}
+              accessibilityRole="button"
+              accessibilityLabel={`Filter by ${brand}`}
+              accessibilityState={{ selected: activeBrand === brand }}
             >
-              {brand}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+              <Text
+                style={[
+                  styles.filterText,
+                  activeBrand === brand && styles.filterTextActive,
+                ]}
+              >
+                {brand}
+              </Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
 
       {isError ? (
         <ErrorState
@@ -127,6 +132,8 @@ export default function ShopScreen() {
                 <Pressable
                   style={styles.card}
                   onPress={() => router.push(`/product/${item.slug}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${item.brand.name} ${item.name}, ${formatPriceLabel(item.prices)}`}
                 >
                   {firstImage ? (
                     <Image
@@ -160,15 +167,22 @@ export default function ShopScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.ivory },
+  filterWrap: {
+    height: 52,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.lightGray,
+  },
   filterRow: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     gap: 8,
+    alignItems: "center" as const,
   },
   filterChip: {
+    height: 36,
+    justifyContent: "center" as const,
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.lightGray,
   },

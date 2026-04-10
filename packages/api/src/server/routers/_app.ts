@@ -5,6 +5,10 @@ import { authRouter } from "./auth";
 import { wishlistRouter } from "./wishlist";
 import { cartRouter } from "./cart";
 import { orderRouter } from "./order";
+import { collectionRouter } from "./collection";
+import { addressRouter } from "./address";
+import { reviewRouter } from "./review";
+import { profileRouter } from "./profile";
 
 export const appRouter = router({
   product: productRouter,
@@ -13,6 +17,10 @@ export const appRouter = router({
   wishlist: wishlistRouter,
   cart: cartRouter,
   order: orderRouter,
+  collection: collectionRouter,
+  address: addressRouter,
+  review: reviewRouter,
+  profile: profileRouter,
 });
 
 export type AppRouter = typeof appRouter;

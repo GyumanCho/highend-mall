@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
+import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { colors, fonts, spacing } from "@/lib/theme";
 import { trpc } from "@/lib/trpc";
@@ -51,6 +52,12 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* Search Bar */}
+      <Pressable style={styles.searchBar} onPress={() => router.push("/search" as never)} accessibilityRole="search" accessibilityLabel="Search products and brands">
+        <Ionicons name="search" size={16} color={colors.warmGray} />
+        <Text style={styles.searchPlaceholder}>Search products, brands...</Text>
+      </Pressable>
+
       {/* VIP Banner */}
       <View style={styles.vipBanner}>
         <Text style={styles.vipText}>
@@ -155,6 +162,21 @@ export default function HomeScreen() {
           </ScrollView>
         </View>
       ) : null}
+
+      {/* Collections */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Collections</Text>
+        <Text style={styles.sectionSubtitle}>
+          Explore the latest seasonal collections
+        </Text>
+        <Pressable
+          style={styles.collectionsBtn}
+          onPress={() => router.push("/collections" as never)}
+        >
+          <Text style={styles.collectionsBtnText}>VIEW ALL COLLECTIONS</Text>
+          <Ionicons name="arrow-forward" size={16} color={colors.charcoal} />
+        </Pressable>
+      </View>
 
       {/* Private Sale */}
       <View style={styles.privateSale}>
@@ -270,6 +292,31 @@ const styles = StyleSheet.create({
     color: colors.charcoal,
     textTransform: "uppercase",
   },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginHorizontal: spacing.md,
+    marginTop: spacing.sm,
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  searchPlaceholder: { fontSize: 14, color: colors.warmGray },
+  collectionsBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: spacing.lg,
+    marginHorizontal: spacing.xl,
+    borderWidth: 1,
+    borderColor: colors.charcoal,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+  },
+  collectionsBtnText: { fontSize: 11, letterSpacing: 2, color: colors.charcoal },
   privateSale: {
     backgroundColor: colors.charcoal,
     paddingVertical: spacing.xxl * 1.2,
