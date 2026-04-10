@@ -42,6 +42,13 @@ export default function HomeScreen() {
 
   const products = (response?.data ?? []) as unknown as ReadonlyArray<CuratedProduct>;
 
+  const brandsResponse = trpc.brand.list.useQuery({});
+  const brands = (brandsResponse.data?.data ?? []) as unknown as ReadonlyArray<{
+    id: string;
+    name: string;
+    slug: string;
+  }>;
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* VIP Banner */}
@@ -126,6 +133,28 @@ export default function HomeScreen() {
           </ScrollView>
         )}
       </View>
+
+      {/* Featured Houses */}
+      {brands.length > 0 ? (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Featured Houses</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.brandRow}
+          >
+            {brands.slice(0, 8).map((b) => (
+              <Pressable
+                key={b.id}
+                style={styles.brandChip}
+                onPress={() => router.push(`/brand/${b.slug}`)}
+              >
+                <Text style={styles.brandChipText}>{b.name}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
 
       {/* Private Sale */}
       <View style={styles.privateSale}>
@@ -223,6 +252,24 @@ const styles = StyleSheet.create({
   },
   productName: { fontSize: 13, color: colors.charcoal, marginTop: 2 },
   productPrice: { fontSize: 13, color: colors.warmGray, marginTop: 2 },
+  brandRow: {
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
+    gap: 10,
+  },
+  brandChip: {
+    borderWidth: 0.5,
+    borderColor: colors.charcoal,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 24,
+  },
+  brandChipText: {
+    fontSize: 11,
+    letterSpacing: 1.5,
+    color: colors.charcoal,
+    textTransform: "uppercase",
+  },
   privateSale: {
     backgroundColor: colors.charcoal,
     paddingVertical: spacing.xxl * 1.2,

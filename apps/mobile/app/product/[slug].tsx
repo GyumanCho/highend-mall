@@ -13,6 +13,7 @@ import { useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useCartStore, useWishlistStore } from "@/lib/stores";
+import { useAuthStore } from "@/lib/auth";
 import { colors, fonts, spacing } from "@/lib/theme";
 import { trpc } from "@/lib/trpc";
 
@@ -25,7 +26,18 @@ export default function ProductDetailScreen() {
   const [addedToBag, setAddedToBag] = useState(false);
 
   const addToCart = useCartStore((s) => s.addItem);
-  const { isInWishlist, toggleItem } = useWishlistStore();
+  const { isInWishlist: localIsInWishlist, toggleItem: localToggleWishlist } = useWishlistStore();
+  const customer = useAuthStore((s) => s.customer);
+  const utils = trpc.useUtils();
+  const cartAddMutation = trpc.cart.addItem.useMutation({
+    onSuccess: () => utils.cart.list.invalidate(),
+  });
+  const wishlistToggleMutation = trpc.wishlist.toggle.useMutation({
+    onSuccess: () => utils.wishlist.list.invalidate(),
+  });
+  const serverWishlist = trpc.wishlist.list.useQuery(undefined, {
+    enabled: !!customer,
+  });
 
   const { data, isLoading, isError, error } = trpc.product.getBySlug.useQuery(
     { slug: slug ?? "" },
@@ -84,32 +96,49 @@ export default function ProductDetailScreen() {
   const priceAmount = defaultPrice ? Number(defaultPrice.amount) : 0;
   const materials = (product.materials ?? {}) as Record<string, string>;
   const firstImage = product.images[0]?.url ?? null;
-  const inWishlist = isInWishlist(product.id);
+
+  // 위시리스트 상태: 로그인 시 서버, 비로그인 시 로컬
+  const serverWishlistData = (serverWishlist.data?.data ?? []) as ReadonlyArray<{ productId: string }>;
+  const inWishlist = customer
+    ? serverWishlistData.some((w) => w.productId === product.id)
+    : localIsInWishlist(product.id);
 
   function handleAddToBag() {
-    addToCart({
-      productId: product.id,
-      name: product.name,
-      brand: product.brand.name,
-      price: priceAmount,
-      size: "One Size",
-      slug: slug ?? "",
-      imageUrl: firstImage,
-    });
+    if (customer) {
+      cartAddMutation.mutate({
+        productId: product.id,
+        size: "One Size",
+        quantity: 1,
+      });
+    } else {
+      addToCart({
+        productId: product.id,
+        name: product.name,
+        brand: product.brand.name,
+        price: priceAmount,
+        size: "One Size",
+        slug: slug ?? "",
+        imageUrl: firstImage,
+      });
+    }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setAddedToBag(true);
     setTimeout(() => setAddedToBag(false), 2000);
   }
 
   function handleToggleWishlist() {
-    toggleItem({
-      productId: product.id,
-      name: product.name,
-      brand: product.brand.name,
-      price: priceAmount,
-      slug: slug ?? "",
-      imageUrl: firstImage,
-    });
+    if (customer) {
+      wishlistToggleMutation.mutate({ productId: product.id });
+    } else {
+      localToggleWishlist({
+        productId: product.id,
+        name: product.name,
+        brand: product.brand.name,
+        price: priceAmount,
+        slug: slug ?? "",
+        imageUrl: firstImage,
+      });
+    }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }
 

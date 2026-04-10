@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors } from "@/lib/theme";
 import { trpc, createTrpcClient } from "@/lib/trpc";
+import { useAuthStore } from "@/lib/auth";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 export default function RootLayout() {
@@ -20,6 +21,13 @@ export default function RootLayout() {
       })
   );
   const [trpcClient] = useState(() => createTrpcClient());
+  const hydrate = useAuthStore((s) => s.hydrate);
+
+  // 앱 부팅 시 secure-store에서 토큰 + customer 복원.
+  // 모든 탭이 customer 상태를 즉시 반영할 수 있도록 root에서 1회 실행.
+  useEffect(() => {
+    void hydrate();
+  }, [hydrate]);
 
   return (
     <ErrorBoundary>
