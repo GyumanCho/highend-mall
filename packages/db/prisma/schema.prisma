@@ -74,6 +74,7 @@ model Product {
   reviews         Review[]
   orderItems      OrderItem[]
   wishlistItems   WishlistItem[]
+  cartItems       CartItem[]
   recommendations RecommendationItem[]
 
   @@index([brandId])
@@ -151,7 +152,8 @@ model ProductVariant {
   stock     Int     @default(0)
   sku       String  @unique
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
 
   @@index([productId])
 }
@@ -191,6 +193,7 @@ model Customer {
   email           String   @unique
   name            String?
   phone           String?
+  passwordHash    String?
   tier            VipTier  @default(SILVER)
   annualSpend     Decimal  @default(0) @db.Decimal(12, 2)
   styleDna        Json?
@@ -209,9 +212,49 @@ model Customer {
   recommendations    Recommendation[]
   addresses          Address[]
   campaignRecipients CampaignRecipient[]
+  cartItems          CartItem[]
+  refreshTokens      RefreshToken[]
 
   @@index([tier])
   @@index([email])
+}
+
+// 모바일 JWT refresh token 저장. rotation per refresh.
+// docs/mobile-native/architecture.md §2.4.2
+model RefreshToken {
+  id         String    @id @default(cuid())
+  customerId String
+  tokenHash  String    @unique
+  deviceId   String
+  deviceName String?
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  revokedAt  DateTime?
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([deviceId])
+  @@index([expiresAt])
+}
+
+// 서버 측 카트 (로그인 사용자). 게스트 카트는 클라이언트 로컬 store 유지.
+model CartItem {
+  id         String   @id @default(cuid())
+  customerId String
+  productId  String
+  variantId  String?
+  size       String?
+  quantity   Int      @default(1)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product  Product         @relation(fields: [productId], references: [id])
+  variant  ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@unique([customerId, productId, variantId, size])
+  @@index([customerId])
 }
 
 enum VipTier {

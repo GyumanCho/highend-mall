@@ -1,52 +1,97 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useEffect } from "react";
+import * as Haptics from "expo-haptics";
 import { colors, fonts, spacing } from "@/lib/theme";
-
-const CUSTOMER = {
-  name: "Soyeon Kim",
-  email: "soyeon@example.com",
-  tier: "GOLD",
-  annualSpend: 28000,
-  nextTier: "PLATINUM",
-  nextThreshold: 50000,
-} as const;
+import { useAuthStore, getDeviceInfo } from "@/lib/auth";
+import { trpc } from "@/lib/trpc";
 
 const MENU_ITEMS = [
-  { icon: "receipt-outline" as const, label: "Order History", badge: "2" },
-  { icon: "location-outline" as const, label: "Addresses", badge: null },
-  { icon: "body-outline" as const, label: "Size Profile", badge: null },
-  { icon: "settings-outline" as const, label: "Preferences", badge: null },
-  { icon: "notifications-outline" as const, label: "Notifications", badge: "3" },
+  { icon: "receipt-outline" as const, label: "Order History", route: "/orders" },
+  { icon: "heart-outline" as const, label: "Wishlist", route: "/(tabs)/wishlist" },
+  { icon: "location-outline" as const, label: "Addresses", route: null },
+  { icon: "body-outline" as const, label: "Size Profile", route: null },
+  { icon: "settings-outline" as const, label: "Preferences", route: null },
 ] as const;
 
 export default function AccountScreen() {
-  const progress = Math.min((CUSTOMER.annualSpend / CUSTOMER.nextThreshold) * 100, 100);
-  const remaining = CUSTOMER.nextThreshold - CUSTOMER.annualSpend;
+  const { customer, hydrate, clearSession, isHydrated } = useAuthStore();
+  const utils = trpc.useUtils();
+  const logoutMutation = trpc.auth.logout.useMutation();
+
+  useEffect(() => {
+    void hydrate();
+  }, [hydrate]);
+
+  if (!isHydrated) {
+    return <View style={styles.container} />;
+  }
+
+  // 비로그인 상태
+  if (!customer) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <Ionicons name="person-circle-outline" size={64} color={colors.warmGray} />
+        <Text style={styles.signedOutTitle}>Welcome to Maison</Text>
+        <Text style={styles.signedOutSubtitle}>
+          Sign in to access your wishlist, orders, and personalized recommendations.
+        </Text>
+        <Pressable
+          style={styles.signInBtn}
+          onPress={() => router.push("/login")}
+        >
+          <Text style={styles.signInBtnText}>SIGN IN</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  async function handleSignOut() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    try {
+      const refreshToken = await useAuthStore.getState().getRefreshToken();
+      if (refreshToken) {
+        logoutMutation.mutate({ refreshToken });
+      }
+    } catch {
+      // 무시하고 로컬 정리 진행
+    }
+    await clearSession();
+    void utils.invalidate();
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Profile */}
       <View style={styles.profile}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{CUSTOMER.name.charAt(0)}</Text>
+          <Text style={styles.avatarText}>
+            {(customer.name ?? customer.email).charAt(0).toUpperCase()}
+          </Text>
         </View>
-        <Text style={styles.name}>{CUSTOMER.name}</Text>
-        <Text style={styles.email}>{CUSTOMER.email}</Text>
+        <Text style={styles.name}>{customer.name ?? "Member"}</Text>
+        <Text style={styles.email}>{customer.email}</Text>
       </View>
 
       {/* VIP Status */}
       <View style={styles.vipCard}>
         <View style={styles.vipHeader}>
-          <Text style={styles.vipLabel}>VIP STATUS</Text>
-          <Text style={styles.vipTier}>{CUSTOMER.tier}</Text>
+          <Text style={styles.vipLabel}>MEMBERSHIP</Text>
+          <Text style={styles.vipTier}>{customer.tier}</Text>
         </View>
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: `${progress}%` }]} />
-        </View>
-        <Text style={styles.progressText}>${remaining.toLocaleString()} to {CUSTOMER.nextTier}</Text>
-
         <View style={styles.benefits}>
-          {["Early access (24h)", "Dedicated VIP service", "Birthday gift", "Free shipping"].map((b) => (
+          {[
+            "Early access to collections",
+            "Curated recommendations",
+            "Complimentary shipping",
+          ].map((b) => (
             <View key={b} style={styles.benefitRow}>
               <Ionicons name="checkmark" size={14} color={colors.gold} />
               <Text style={styles.benefitText}>{b}</Text>
@@ -58,23 +103,22 @@ export default function AccountScreen() {
       {/* Menu */}
       <View style={styles.menu}>
         {MENU_ITEMS.map((item) => (
-          <Pressable key={item.label} style={styles.menuItem}>
+          <Pressable
+            key={item.label}
+            style={styles.menuItem}
+            onPress={() => {
+              if (item.route) router.push(item.route as never);
+            }}
+          >
             <Ionicons name={item.icon} size={20} color={colors.charcoal} />
             <Text style={styles.menuLabel}>{item.label}</Text>
-            <View style={styles.menuRight}>
-              {item.badge && (
-                <View style={styles.menuBadge}>
-                  <Text style={styles.menuBadgeText}>{item.badge}</Text>
-                </View>
-              )}
-              <Ionicons name="chevron-forward" size={16} color={colors.lightGray} />
-            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.lightGray} />
           </Pressable>
         ))}
       </View>
 
       {/* Sign out */}
-      <Pressable style={styles.signOut}>
+      <Pressable style={styles.signOut} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
       </Pressable>
 
@@ -85,27 +129,92 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.ivory },
+  centered: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: spacing.xl,
+  },
+  signedOutTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    color: colors.charcoal,
+    marginTop: spacing.md,
+  },
+  signedOutSubtitle: {
+    fontSize: 14,
+    color: colors.warmGray,
+    textAlign: "center",
+    marginTop: spacing.sm,
+    lineHeight: 22,
+    maxWidth: 280,
+  },
+  signInBtn: {
+    marginTop: spacing.xl,
+    backgroundColor: colors.charcoal,
+    paddingHorizontal: 48,
+    paddingVertical: 14,
+  },
+  signInBtnText: { color: colors.white, fontSize: 12, letterSpacing: 2 },
   profile: { alignItems: "center", paddingVertical: spacing.xl },
-  avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: colors.charcoal, justifyContent: "center", alignItems: "center" },
+  avatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.charcoal,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   avatarText: { color: colors.white, fontFamily: fonts.serif, fontSize: 24 },
-  name: { fontFamily: fonts.serif, fontSize: 20, color: colors.charcoal, marginTop: spacing.sm },
+  name: {
+    fontFamily: fonts.serif,
+    fontSize: 20,
+    color: colors.charcoal,
+    marginTop: spacing.sm,
+  },
   email: { fontSize: 13, color: colors.warmGray, marginTop: 2 },
-  vipCard: { marginHorizontal: spacing.md, padding: spacing.lg, backgroundColor: colors.white, borderRadius: 12 },
-  vipHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.md },
+  vipCard: {
+    marginHorizontal: spacing.md,
+    padding: spacing.lg,
+    backgroundColor: colors.white,
+    borderRadius: 12,
+  },
+  vipHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: spacing.md,
+  },
   vipLabel: { fontSize: 10, letterSpacing: 2, color: colors.warmGray },
   vipTier: { fontFamily: fonts.serif, fontSize: 18, color: colors.gold },
-  progressBar: { height: 4, backgroundColor: colors.lightGray, borderRadius: 2, overflow: "hidden" },
-  progressFill: { height: "100%", backgroundColor: colors.gold, borderRadius: 2 },
-  progressText: { fontSize: 11, color: colors.warmGray, marginTop: spacing.xs },
   benefits: { marginTop: spacing.md, gap: 6 },
   benefitRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   benefitText: { fontSize: 12, color: colors.warmGray },
-  menu: { marginTop: spacing.lg, marginHorizontal: spacing.md, backgroundColor: colors.white, borderRadius: 12, overflow: "hidden" },
-  menuItem: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 16, paddingHorizontal: spacing.md, borderBottomWidth: 0.5, borderBottomColor: colors.lightGray },
+  menu: {
+    marginTop: spacing.lg,
+    marginHorizontal: spacing.md,
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 16,
+    paddingHorizontal: spacing.md,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.lightGray,
+  },
   menuLabel: { flex: 1, fontSize: 14, color: colors.charcoal },
-  menuRight: { flexDirection: "row", alignItems: "center", gap: 8 },
-  menuBadge: { backgroundColor: colors.gold, borderRadius: 10, minWidth: 20, height: 20, justifyContent: "center", alignItems: "center", paddingHorizontal: 6 },
-  menuBadgeText: { fontSize: 10, color: colors.white, fontWeight: "600" },
-  signOut: { marginTop: spacing.lg, marginHorizontal: spacing.md, paddingVertical: 14, alignItems: "center" },
-  signOutText: { fontSize: 13, color: colors.warmGray, textDecorationLine: "underline" },
+  signOut: {
+    marginTop: spacing.lg,
+    marginHorizontal: spacing.md,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  signOutText: {
+    fontSize: 13,
+    color: colors.warmGray,
+    textDecorationLine: "underline",
+  },
 });

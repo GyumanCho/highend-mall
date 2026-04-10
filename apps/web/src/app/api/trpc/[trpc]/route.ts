@@ -1,5 +1,6 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@repo/api";
+import { createContextFromHeaders } from "@repo/api";
 import type { NextRequest } from "next/server";
 
 // CORS 정책
@@ -30,14 +31,6 @@ function corsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-// tRPC context — Phase 3에서 JWT 검증 미들웨어로 확장 예정
-function createContext(req: NextRequest) {
-  return {
-    req,
-    // Phase 3: user?: { id: string; email: string } from decoded JWT
-  };
-}
-
 async function handler(req: NextRequest): Promise<Response> {
   const origin = req.headers.get("origin");
   const cors = corsHeaders(origin);
@@ -50,7 +43,7 @@ async function handler(req: NextRequest): Promise<Response> {
     endpoint: "/api/trpc",
     req,
     router: appRouter,
-    createContext: () => createContext(req),
+    createContext: () => createContextFromHeaders(req.headers),
     onError({ error, path }) {
       if (process.env.NODE_ENV !== "production") {
         console.error(`[tRPC] ${path ?? "<no-path>"}:`, error.message);
