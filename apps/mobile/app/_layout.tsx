@@ -14,9 +14,11 @@ import {
   Inter_500Medium,
   Inter_600SemiBold,
 } from "@expo-google-fonts/inter";
+import * as Notifications from "expo-notifications";
 import { colors } from "@/lib/theme";
 import { trpc, createTrpcClient } from "@/lib/trpc";
 import { useAuthStore } from "@/lib/auth";
+import { registerForPushNotifications, getNotificationDeepLink } from "@/lib/notifications";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 SplashScreen.preventAutoHideAsync();
@@ -50,6 +52,25 @@ export default function RootLayout() {
   useEffect(() => {
     void hydrate();
   }, [hydrate]);
+
+  // 푸시 알림 토큰 등록 + 알림 탭 핸들러
+  useEffect(() => {
+    void registerForPushNotifications();
+
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const url = getNotificationDeepLink(response.notification);
+        if (url) {
+          // expo-router가 앱 내 경로를 처리
+          void import("expo-router").then(({ router: nav }) => {
+            nav.push(url as never);
+          });
+        }
+      }
+    );
+
+    return () => subscription.remove();
+  }, []);
 
   const onLayoutReady = useCallback(async () => {
     if (fontsLoaded) {

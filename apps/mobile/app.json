@@ -6,30 +6,77 @@
     "orientation": "portrait",
     "scheme": "maison",
     "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#faf8f5"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.maison.app"
+      "bundleIdentifier": "com.maison.app",
+      "associatedDomains": ["applinks:maison.co.kr"],
+      "infoPlist": {
+        "NSCameraUsageDescription": "Used for product reviews",
+        "NSPhotoLibraryUsageDescription": "Used for product reviews"
+      }
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#faf8f5"
       },
-      "package": "com.maison.app"
+      "package": "com.maison.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "maison.co.kr",
+              "pathPrefix": "/products"
+            },
+            {
+              "scheme": "https",
+              "host": "maison.co.kr",
+              "pathPrefix": "/collections"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "plugins": [
       "expo-router",
       "expo-asset",
       "expo-font",
-      "expo-image"
+      "expo-image",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#2d2926"
+        }
+      ],
+      "expo-updates"
     ],
     "experiments": {
       "typedRoutes": true
     },
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_PROJECT_ID",
+      "enabled": true,
+      "fallbackToCacheTimeout": 3000
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "extra": {
-      "apiBaseUrl": "http://localhost:3000"
+      "apiBaseUrl": "http://localhost:3000",
+      "eas": {
+        "projectId": "YOUR_PROJECT_ID"
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  Share,
 } from "react-native";
 import { Image } from "expo-image";
 import { useLocalSearchParams, router } from "expo-router";
@@ -154,6 +155,18 @@ export default function ProductDetailScreen() {
       <Pressable onPress={() => router.back()} style={styles.backButton}>
         <Ionicons name="chevron-back" size={24} color={colors.charcoal} />
       </Pressable>
+      <Pressable
+        onPress={() => {
+          Share.share({
+            message: `${product.brand?.name ?? ""} — ${product.name}\nhttps://maison.co.kr/products/${product.slug}`,
+          });
+        }}
+        style={styles.shareButton}
+        accessibilityRole="button"
+        accessibilityLabel="Share this product"
+      >
+        <Ionicons name="share-outline" size={22} color={colors.charcoal} />
+      </Pressable>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -279,6 +292,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 56,
     left: 16,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  shareButton: {
+    position: "absolute",
+    top: 56,
+    right: 16,
     zIndex: 10,
     width: 40,
     height: 40,
