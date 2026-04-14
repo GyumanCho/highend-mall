@@ -7,7 +7,12 @@
 
 > ℹ️ **이 프로젝트는 [biz-harness](https://github.com/GyumanCho/biz-harness) Claude Code 플러그인으로 생성된 결과물입니다.**
 > biz-harness가 비즈니스 유스케이스(럭셔리 패션 이커머스)를 분석하여 도메인 모델, tRPC 라우터, 웹/모바일 화면, AI 에이전트 파이프라인을 단계적으로 구성했습니다.
-> 동일한 방식의 새 프로젝트를 만들고 싶다면 `claude plugin install biz-harness@biz-harness` 후 `/biz-harness` 스킬을 실행하세요.
+> 동일한 방식의 새 프로젝트를 만들고 싶다면 Claude Code에서 아래 슬래시 명령을 차례로 실행하세요:
+> ```
+> /plugin marketplace add GyumanCho/biz-harness
+> /plugin install biz-harness@biz-harness
+> /biz-harness
+> ```
 
 ---
 
