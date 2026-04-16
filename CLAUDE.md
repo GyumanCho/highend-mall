@@ -129,6 +129,67 @@ docker compose up -d   # PostgreSQL 16 + Redis 7 실행
 
 ---
 
+## 모바일 개발 (Android 에뮬레이터)
+
+### 환경 설정
+
+- **Android SDK 경로**: `~/Library/Android/sdk` (`ANDROID_HOME` 환경변수 미설정 상태 — 명령 실행 시 직접 export 필요)
+- **에뮬레이터**: `Galaxy_S26`, `Pixel_Fold_API_35`
+- **adb 경로**: `$ANDROID_HOME/platform-tools/adb`
+
+### Expo dev server 실행 (필수 절차)
+
+**Expo는 인터랙티브 TTY가 필수**. `nohup`, `&`, `script`, `expect` 등 백그라운드 실행은 모두 실패한다. 반드시 `tmux`를 사용할 것.
+
+```bash
+# 1. 인프라 시작
+docker compose up -d                    # PostgreSQL + Redis
+pnpm web:dev > /tmp/maison-web.log 2>&1 &  # 웹/API (백그라운드 가능)
+
+# 2. 에뮬레이터 부팅
+export ANDROID_HOME=~/Library/Android/sdk
+$ANDROID_HOME/emulator/emulator -avd Galaxy_S26 &
+
+# 3. 부팅 완료 대기
+until $ANDROID_HOME/platform-tools/adb shell getprop sys.boot_completed 2>/dev/null | grep -q "1"; do sleep 2; done
+
+# 4. ADB 포트 포워딩 (필수! 에뮬레이터→호스트 통신)
+$ANDROID_HOME/platform-tools/adb reverse tcp:8081 tcp:8081
+$ANDROID_HOME/platform-tools/adb reverse tcp:3000 tcp:3000
+
+# 5. Metro를 tmux 세션에서 시작
+tmux new-session -d -s expo -c apps/mobile \
+  "export ANDROID_HOME=~/Library/Android/sdk && export PATH=\$ANDROID_HOME/platform-tools:\$PATH && pnpm exec expo start --android --port 8081"
+
+# 6. Expo Go 로그인 프롬프트 처리 (초기 1회)
+# tmux에서 "Log in / Proceed anonymously" 프롬프트가 뜨면:
+tmux send-keys -t expo Down Enter
+```
+
+### 주의사항 (시행착오 정리)
+
+| 문제 | 원인 | 해결 |
+|------|------|------|
+| Metro가 즉시 종료 | `nohup`, `script`, `expect` 등은 Expo의 TTY 감지를 속이지 못함 | **tmux** 세션 사용 |
+| 앱 로딩 스피너 무한 | 에뮬레이터가 호스트 Metro에 연결 못 함 | `adb reverse tcp:8081 tcp:8081` 포트 포워딩 |
+| Expo Go "Something went wrong" | Metro가 죽은 후 앱이 재연결 실패 | Metro 재시작 후 `adb shell am start -a android.intent.action.VIEW -d "exp://localhost:8081" host.exp.exponent` |
+| 이전 코드가 캐시로 남음 | Metro 캐시에 이전 번들 잔존 | `--clear` 플래그 + `adb shell pm clear host.exp.exponent` |
+| "Input is required" 에러 | 비인터랙티브 모드에서 포트 충돌 등 프롬프트 발생 | 기존 Metro 프로세스 kill 후 재시작: `kill $(lsof -t -i:8081)` |
+| Expo Go 로그인 프롬프트 | 초기 실행 시 로그인 요구 | tmux에서 `Down Enter` 키 전송으로 "Proceed anonymously" 선택 |
+| Worktree에서 web 500 에러 | `.env` 파일과 `node_modules` 심링크가 worktree에 없음 | Worktree에서 웹 서버 실행 시 `pnpm install` + `.env` 복사 필요 |
+| `prisma migrate dev` 실패 (exit 130) | 인터랙티브 프롬프트가 필요한 명령 | `pnpm exec prisma migrate deploy` 사용 (비인터랙티브) |
+| `node` / `npx` 명령 무한 루프 | nvm lazy loading과 충돌 | `pnpm exec` 로 실행하거나 `lsof`, `find` 등 시스템 명령 활용 |
+
+### tmux 세션 관리
+
+```bash
+tmux attach -t expo     # Metro 로그 확인
+# Ctrl+B D              # detach (Metro는 계속 실행)
+tmux kill-session -t expo  # 세션 종료
+```
+
+---
+
 ## 코딩 컨벤션
 
 - **Next.js 16 주의**: 학습 데이터와 다를 수 있음. 코드 작성 전 `node_modules/next/dist/docs/` 가이드를 반드시 참조
